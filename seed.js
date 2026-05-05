@@ -346,6 +346,7 @@ const seedData = async () => {
         phone: '+1234567895',
         purpose: 'Business Meeting',
         hostUserId: users[3]._id,
+        bookingId: bookings[0]._id,
         hallId: halls[0]._id,
         visitDate: new Date('2026-05-15'),
         checkInTime: '08:30',
@@ -358,8 +359,9 @@ const seedData = async () => {
         phone: '+1234567896',
         purpose: 'Event Planning',
         hostUserId: users[4]._id,
+        bookingId: bookings[1]._id,
         hallId: halls[1]._id,
-        visitDate: new Date('2026-06-19'),
+        visitDate: new Date('2026-06-20'),
         checkInTime: '16:00',
         status: 'Checked-In'
       }

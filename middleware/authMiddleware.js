@@ -38,5 +38,6 @@ const adminOnly = authorize('admin');
 const hallOwnerOnly = authorize('hall_owner');
 const userOnly = authorize('user');
 const adminOrOwner = authorize('admin', 'hall_owner');
+const bookingUser = authorize('user', 'hall_owner', 'admin');
 
-module.exports = { protect, authorize, adminOnly, hallOwnerOnly, userOnly, adminOrOwner };
+module.exports = { protect, authorize, adminOnly, hallOwnerOnly, userOnly, adminOrOwner, bookingUser };

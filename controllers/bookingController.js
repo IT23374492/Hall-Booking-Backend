@@ -32,13 +32,9 @@ const findConflictingBooking = async ({ hallId, bookingDate, startTime, endTime,
   }) || null;
 };
 
-// @POST /api/bookings  - User only
+// @POST /api/bookings  - Any signed-in account
 const createBooking = async (req, res) => {
   try {
-    if (req.user.role !== 'user') {
-      return res.status(403).json({ message: 'Only users can create bookings' });
-    }
-
     const payload = normalizePayload(req.body);
     const error = validateBookingPayload(payload);
     if (error) return res.status(400).json({ message: error });
@@ -81,7 +77,7 @@ const createBooking = async (req, res) => {
   }
 };
 
-// @GET /api/bookings/my  - User: see own bookings
+// @GET /api/bookings/my  - Signed-in account: see own bookings
 const getMyBookings = async (req, res) => {
   try {
     const bookings = await Booking.find({ userId: req.user._id })
@@ -174,7 +170,7 @@ const updateBookingStatus = async (req, res) => {
   }
 };
 
-// @PUT /api/bookings/:id/cancel  - User: cancel their own booking
+// @PUT /api/bookings/:id/cancel  - Signed-in account: cancel their own booking
 const cancelBooking = async (req, res) => {
   try {
     const booking = await Booking.findById(req.params.id).populate('hallId', 'name ownerId');

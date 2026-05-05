@@ -105,7 +105,10 @@ const login = async (req, res) => {
       const inactiveMessage = user.role === 'hall_owner'
         ? 'Your hall owner account is waiting for admin approval.'
         : 'Account not found or inactive';
-      return res.status(401).json({ message: inactiveMessage });
+      return res.status(403).json({
+        message: inactiveMessage,
+        reason: user.role === 'hall_owner' ? 'approval_required' : 'account_inactive',
+      });
     }
 
     if (await user.matchPassword(password)) {
@@ -189,8 +192,18 @@ const toggleUserStatus = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
     if (!user) return res.status(404).json({ message: 'User not found' });
+    const wasInactiveHallOwner = user.role === 'hall_owner' && !user.isActive;
     user.isActive = !user.isActive;
     await user.save();
+
+    if (wasInactiveHallOwner && user.isActive) {
+      sendEmailSafely({
+        to: user.email,
+        subject: 'Your hall owner account has been approved',
+        text: `Hello ${user.name}, your hall owner registration has been approved by the admin. You can now sign in to the Hall Booking Management System.`,
+      });
+    }
+
     res.json({ message: `User ${user.isActive ? 'activated' : 'deactivated'}`, isActive: user.isActive });
   } catch (error) {
     res.status(500).json({ message: error.message });

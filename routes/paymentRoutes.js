@@ -11,9 +11,11 @@ router.get('/my', protect, userOnly, getMyPayments);
 // Hall Owner: view payments for their halls
 router.get('/hall', protect, adminOrOwner, getOwnerPayments);
 
-// Admin only
+// Admin or hall owner (own halls only)
 router.get('/', protect, adminOnly, getAllPayments);
-router.put('/:id/status', protect, adminOnly, updatePaymentStatus);
+router.put('/:id/status', protect, adminOrOwner, updatePaymentStatus);
+
+// Admin only
 router.put('/:id/refund', protect, adminOnly, refundPayment);
 router.delete('/:id', protect, adminOnly, deletePayment);
 

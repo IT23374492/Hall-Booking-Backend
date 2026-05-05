@@ -9,8 +9,9 @@ router.get('/my', protect, getMyVisitors);
 
 // Admin only
 router.get('/', protect, adminOnly, getAllVisitors);
-router.put('/:id/checkin', protect, adminOnly, checkInVisitor);
-router.put('/:id/checkout', protect, adminOnly, checkOutVisitor);
-router.delete('/:id', protect, adminOnly, deleteVisitor);
+// Users, hall owners, and admins can manage allowed visitor logs
+router.put('/:id/checkin', protect, checkInVisitor);
+router.put('/:id/checkout', protect, checkOutVisitor);
+router.delete('/:id', protect, deleteVisitor);
 
 module.exports = router;

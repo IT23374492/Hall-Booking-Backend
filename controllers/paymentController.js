@@ -117,6 +117,22 @@ const updatePaymentStatus = async (req, res) => {
     const payment = await Payment.findById(req.params.id);
     if (!payment) return res.status(404).json({ message: 'Payment not found' });
 
+    if (req.user.role === 'hall_owner') {
+      const booking = await Booking.findById(payment.bookingId).select('hallId');
+      if (!booking) {
+        return res.status(404).json({ message: 'Booking not found for this payment' });
+      }
+
+      const hall = await Hall.findById(booking.hallId).select('ownerId');
+      if (!hall || String(hall.ownerId) !== String(req.user._id)) {
+        return res.status(403).json({ message: 'Not authorized to update this payment' });
+      }
+
+      if (!['Completed', 'Failed'].includes(paymentStatus)) {
+        return res.status(403).json({ message: 'Hall owners can only mark payments as completed or failed.' });
+      }
+    }
+
     payment.paymentStatus = paymentStatus;
     payment.gatewayStatus = paymentStatus === 'Completed'
       ? 'completed'

@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const { createBooking, getMyBookings, getHallBookings, getAllBookings, updateBookingStatus, cancelBooking } = require('../controllers/bookingController');
-const { protect, adminOnly, adminOrOwner, userOnly } = require('../middleware/authMiddleware');
+const { protect, adminOnly, adminOrOwner, bookingUser } = require('../middleware/authMiddleware');
 
-// User: create and view own bookings
-router.post('/', protect, userOnly, createBooking);
-router.get('/my', protect, userOnly, getMyBookings);
-router.put('/:id/cancel', protect, userOnly, cancelBooking);
+// Any signed-in account: create and view own bookings
+router.post('/', protect, bookingUser, createBooking);
+router.get('/my', protect, bookingUser, getMyBookings);
+router.put('/:id/cancel', protect, bookingUser, cancelBooking);
 
 // Hall Owner or Admin: view bookings per hall and update status
 router.get('/hall/:hallId', protect, adminOrOwner, getHallBookings);

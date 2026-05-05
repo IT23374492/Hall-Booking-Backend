@@ -6,6 +6,7 @@ const visitorSchema = new mongoose.Schema({
   phone: { type: String, required: true },
   purpose: { type: String, required: true },
   hostUserId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  bookingId: { type: mongoose.Schema.Types.ObjectId, ref: 'Booking' },
   hallId: { type: mongoose.Schema.Types.ObjectId, ref: 'Hall' },
   visitDate: { type: Date, required: true },
   checkInTime: { type: String },

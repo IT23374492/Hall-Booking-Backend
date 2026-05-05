@@ -1,5 +1,6 @@
 const Review = require('../models/Review');
 const Booking = require('../models/Booking');
+const Payment = require('../models/Payment');
 const { normalizePayload, validateReviewPayload } = require('../utils/validation');
 
 // @POST /api/reviews
@@ -20,6 +21,15 @@ const createReview = async (req, res) => {
       return res.status(400).json({ message: 'Review does not match the booked hall' });
     if (booking.status !== 'Approved')
       return res.status(400).json({ message: 'Only approved bookings can be reviewed' });
+
+    const approvedPayment = await Payment.findOne({
+      bookingId,
+      userId: req.user._id,
+      paymentStatus: 'Completed',
+    });
+    if (!approvedPayment) {
+      return res.status(400).json({ message: 'Review is available only after payment approval' });
+    }
 
     const existing = await Review.findOne({ bookingId });
     if (existing) return res.status(400).json({ message: 'Review already submitted' });

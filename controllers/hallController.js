@@ -113,6 +113,7 @@ const updateHall = async (req, res) => {
       pricePerHour: Object.prototype.hasOwnProperty.call(payload, 'pricePerHour') ? payload.pricePerHour : hall.pricePerHour,
       location: Object.prototype.hasOwnProperty.call(payload, 'location') ? payload.location : hall.location,
       hallType: Object.prototype.hasOwnProperty.call(payload, 'hallType') ? payload.hallType : hall.hallType,
+      amenities: Object.prototype.hasOwnProperty.call(payload, 'amenities') ? payload.amenities : hall.amenities,
     };
     const error = validateHallPayload(mergedPayload);
     if (error) return res.status(400).json({ message: error });
